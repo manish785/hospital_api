@@ -1,64 +1,66 @@
 const Doctor = require('../models/doctor');
+const jwt = require('jsonwebtoken');
 // const crypto = require('crypto');
 
 
-// render the Sign Up page
-module.exports.Register = function(req, res){
-    // If the user is signed up, then hittig this Sign Up route, will render to the same Sign Up page
-    if(req.isAuthenticated()){
-      return res.redirect('back');
-    }
-
-    return res.render('user_sign_up', {
-        title: 'Codeial | Sign Up',
-   });
-}
-
-// render the Sign In page
-module.exports.signIn = function(req, res){
-    // If the user is signed in, then hittig this Sign In route, will render to the same Sign In page
-    if(req.isAuthenticated()){
-      return res.redirect('back');
-    }
-
-    return res.render('user_sign_in', {
-        title: 'Codeial | Sign In',
-   });
-}
-
 // get the Sign Up data
-module.exports.create = async function(req, res) {
-    if (req.body.password != req.body.confirm_password) {
-      console.log('Password and Confirm Password is not matching!');
-      return res.redirect('back');
+module.exports.register = async function(req, res) {
+    const {email, username, password, confirm_password} = req.body;
+
+    if (password != confirm_password) {
+      return res.status(422).json({
+        message: 'Password and Confirm Password Mismatch',
+    });
     }
   
     try {
-      const doctor = await Doctor.findOne({ email: req.body.email });
+      const doctor = await Doctor.findOne({ email });
       if (!doctor) {
         // when we will create a new user, it will render towards the users's sign in page
         let data ={
-          username: req.body.username,
-          email : req.body.email,
-          password: req.body.password
+          username: username,
+          email : email,
+          password: password
         }
         await Doctor.create(data);
-        console.log('Sign UP successfully');
-        return res.redirect('/doctors/sign-in');
+        return res.status(200).json({
+          message: 'Doctor Registered Successfully!',
+      });
       } else {
-        return res.redirect('back');
+        return res.status(400).json({
+          message: 'Doctor Already Exist.',
+      });
       }
     } catch (err) {
-      console.log('error in signing up:', err);
-      return res.redirect('back');
+      return res.status(500).json({
+        message: 'Internal Server Error',
+    });
     }
   };
   
 
-// sign in and create a session for the user
-module.exports.createSession = function(req, res){
-    console.log( 'Logged in successfully');
-    return res.redirect('/');
+
+  module.exports.login = async function(req, res){
+   
+    try{
+        const {email, password} = req.body;
+
+        let doctor = await Doctor.findOne( {email} );
+        if(!doctor){
+          return res.status(422).json({
+            'message': 'Invalid Credentials',
+        });
+       }
+       
+      return res.status(200).json({
+          data: {
+              token : jwt.sign(doctor.toJSON(),  'manish', {expiresIn: '1000000'})
+          },
+          'message': 'Sign in successfully, here is your token, Please keep it safe',
+      });
+    }catch(err){
+      return res.status(500).json({
+        'message': 'Internal Server Error',
+    });
+    }
 }
-
-

@@ -2,6 +2,7 @@ const Patient = require('../models/patient');
 const Doctor = require('../models/doctor');
 
 
+
 module.exports.register = async function(req, res) {
     try {
        // const doctorId = req.doctor._id; // Assuming the authenticated doctor's _id is available in req.user

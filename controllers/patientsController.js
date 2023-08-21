@@ -8,9 +8,9 @@ module.exports.register = async function(req, res) {
         
         let doctor = await Doctor.findOne({});
         
-        let patient = await Patient.find({phone_number: req.body.phone_number});
+        let patient = await Patient.findOne({});
         
-        console.log(patient);
+     
         if(patient.length > 0){
             return res.status(200).json({
                 data: {

@@ -1,6 +1,6 @@
 const Doctor = require('../models/doctor');
 const jwt = require('jsonwebtoken');
-// const crypto = require('crypto');
+const crypto = require('crypto');
 
 
 // get the Sign Up data
@@ -20,7 +20,7 @@ module.exports.register = async function(req, res) {
         let data ={
           username: username,
           email : email,
-          password: password
+          password: crypto.randomBytes(20).toString('hex')
         }
         await Doctor.create(data);
         return res.status(200).json({

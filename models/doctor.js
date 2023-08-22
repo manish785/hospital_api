@@ -13,6 +13,9 @@ const doctorSchema = new mongoose.Schema({
     },
     password: {
         type: String,
+    },
+    confirm_password: {
+        type: String,
     }
 },{
     timestamps: true

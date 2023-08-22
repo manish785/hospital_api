@@ -9,8 +9,6 @@ router.use('/report', require('./report'));
 
 
 
-// accessing the api folder
-router.use('/api', require('./api'));
 
 
 

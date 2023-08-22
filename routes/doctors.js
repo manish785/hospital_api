@@ -5,9 +5,9 @@ const doctorsController = require('../controllers/doctorsController');
 
 
 
-router.get('/register', doctorsController.Register);
-router.get('/login', doctorsController.signIn);
-router.post('/create', doctorsController.create);
+// router.post('/register', doctorsController.Register);
+router.post('/register', doctorsController.register);
+router.post('/login', doctorsController.login);
 
 
 

@@ -11,7 +11,9 @@ const MongoStore = require("connect-mongo");
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
-  
+// we need to add this middleware before routes
+app.use(bodyParser.json()); // This middleware parses JSON data
+
 
  //connect to database
  dotenv.config();
@@ -31,9 +33,7 @@ const passportLocal = require("./config/passport-local-strategy");
 
 app.use(cookieParser());
 
-// set up view engine
-app.set("view engine", "ejs");
-app.set("views", "./views");
+
 
 // mongo store is used to store the session cookie in the db
 app.use(session({
